@@ -1,4 +1,3 @@
-'''
 import pytest
 import sqlite3
 import os
@@ -88,4 +87,4 @@ def test_get_data_lineage(warehouse_instance):
     assert len(lineage["sources"]) > 0
     assert len(lineage["transformations"]) > 0
     assert len(lineage["targets"]) > 0
-'''
+
