@@ -9,10 +9,10 @@ import pandas as pd
 import json
 import os
 from datetime import datetime, timedelta
-from flask import Flask, jsonify, request
+from flask import Flask, render_template_string, jsonify, request
 import random
 
-app = Flask(__name__, static_folder='../docs', static_url_path='/')
+app = Flask(__name__)
 
 class CloudDataWarehouse:
     """Cloud data warehouse implementation with analytics capabilities."""
@@ -329,11 +329,484 @@ class CloudDataWarehouse:
             ]
         }
 
+warehouse = CloudDataWarehouse()
+
+HTML_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Data Warehouse</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .kpi-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .kpi-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .status-pass {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .status-fail {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .lineage-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .lineage-step {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .lineage-arrow {
+            font-size: 2rem;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>☁️ Cloud Data Warehouse</h1>
+            <p>Modern cloud-based data warehouse with analytics and monitoring</p>
+        </div>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showTab('analytics')">📊 Analytics</div>
+            <div class="nav-tab" onclick="showTab('quality')">🔍 Data Quality</div>
+            <div class="nav-tab" onclick="showTab('lineage')">🔄 Data Lineage</div>
+        </div>
+        
+        <div id="analytics" class="tab-content active">
+            <div class="kpi-grid" id="kpiGrid">
+                <!-- KPIs will be populated here -->
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>📈 Sales by Category</h3>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🌍 Sales by Country</h3>
+                    <div class="chart-container">
+                        <canvas id="countryChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>📅 Monthly Trends</h3>
+                    <div class="chart-container">
+                        <canvas id="trendsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="quality" class="tab-content">
+            <div class="card">
+                <h3>🔍 Data Quality Metrics</h3>
+                <button onclick="runQualityChecks()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-bottom: 20px;">
+                    🔄 Run Quality Checks
+                </button>
+                <table class="data-table" id="qualityTable">
+                    <thead>
+                        <tr>
+                            <th>Table</th>
+                            <th>Metric</th>
+                            <th>Value</th>
+                            <th>Threshold</th>
+                            <th>Status</th>
+                            <th>Check Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="qualityTableBody">
+                        <!-- Quality metrics will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="lineage" class="tab-content">
+            <div class="card">
+                <h3>🔄 Data Lineage</h3>
+                <div class="lineage-flow">
+                    <div class="lineage-step">
+                        <h4>📥 Sources</h4>
+                        <div id="sources"></div>
+                    </div>
+                    <div class="lineage-arrow">→</div>
+                    <div class="lineage-step">
+                        <h4>⚙️ Transformations</h4>
+                        <div id="transformations"></div>
+                    </div>
+                    <div class="lineage-arrow">→</div>
+                    <div class="lineage-step">
+                        <h4>📤 Targets</h4>
+                        <div id="targets"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let analyticsData = null;
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Load data based on tab
+            if (tabName === 'analytics' && !analyticsData) {
+                loadAnalytics();
+            } else if (tabName === 'quality') {
+                loadQualityMetrics();
+            } else if (tabName === 'lineage') {
+                loadDataLineage();
+            }
+        }
+        
+        async function loadAnalytics() {
+            try {
+                const response = await fetch('/analytics');
+                analyticsData = await response.json();
+                
+                displayKPIs(analyticsData.kpis);
+                createCategoryChart(analyticsData.category_sales);
+                createCountryChart(analyticsData.country_sales);
+                createTrendsChart(analyticsData.monthly_trends);
+                
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+        
+        function displayKPIs(kpis) {
+            const kpiGrid = document.getElementById('kpiGrid');
+            
+            kpiGrid.innerHTML = `
+                <div class="kpi-card">
+                    <div class="kpi-value">$${(kpis.total_revenue || 0).toLocaleString()}</div>
+                    <div class="kpi-label">Total Revenue</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">$${(kpis.total_profit || 0).toLocaleString()}</div>
+                    <div class="kpi-label">Total Profit</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">${(kpis.total_transactions || 0).toLocaleString()}</div>
+                    <div class="kpi-label">Transactions</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">$${(kpis.avg_transaction_value || 0).toFixed(2)}</div>
+                    <div class="kpi-label">Avg Transaction</div>
+                </div>
+            `;
+        }
+        
+        function createCategoryChart(data) {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.map(d => d.category),
+                    datasets: [{
+                        data: data.map(d => d.revenue),
+                        backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createCountryChart(data) {
+            const ctx = document.getElementById('countryChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(d => d.country),
+                    datasets: [{
+                        label: 'Revenue',
+                        data: data.map(d => d.revenue),
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createTrendsChart(data) {
+            const ctx = document.getElementById('trendsChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(d => `${d.year}-${d.month.toString().padStart(2, '0')}`),
+                    datasets: [{
+                        label: 'Revenue',
+                        data: data.map(d => d.revenue),
+                        borderColor: '#667eea',
+                        backgroundColor: '#667eea20',
+                        tension: 0.4
+                    }, {
+                        label: 'Profit',
+                        data: data.map(d => d.profit),
+                        borderColor: '#764ba2',
+                        backgroundColor: '#764ba220',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        async function runQualityChecks() {
+            try {
+                const response = await fetch('/quality-check', { method: 'POST' });
+                const checks = await response.json();
+                
+                displayQualityMetrics(checks);
+                
+            } catch (error) {
+                console.error('Error running quality checks:', error);
+            }
+        }
+        
+        async function loadQualityMetrics() {
+            try {
+                const response = await fetch('/quality-metrics');
+                const metrics = await response.json();
+                
+                displayQualityMetrics(metrics);
+                
+            } catch (error) {
+                console.error('Error loading quality metrics:', error);
+            }
+        }
+        
+        function displayQualityMetrics(metrics) {
+            const tbody = document.getElementById('qualityTableBody');
+            
+            tbody.innerHTML = metrics.map(metric => `
+                <tr>
+                    <td>${metric.table_name}</td>
+                    <td>${metric.metric_name}</td>
+                    <td>${metric.metric_value}</td>
+                    <td>${metric.threshold_value}</td>
+                    <td class="status-${metric.status.toLowerCase()}">${metric.status}</td>
+                    <td>${new Date(metric.check_date).toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+        
+        async function loadDataLineage() {
+            try {
+                const response = await fetch('/lineage');
+                const lineage = await response.json();
+                
+                document.getElementById('sources').innerHTML = lineage.sources.map(s => 
+                    `<div><strong>${s.name}</strong><br><small>${s.type}</small></div>`
+                ).join('');
+                
+                document.getElementById('transformations').innerHTML = lineage.transformations.map(t => 
+                    `<div><strong>Step ${t.step}</strong><br>${t.process}<br><small>${t.description}</small></div>`
+                ).join('');
+                
+                document.getElementById('targets').innerHTML = lineage.targets.map(t => 
+                    `<div><strong>${t.name}</strong><br><small>${t.type}</small></div>`
+                ).join('');
+                
+            } catch (error) {
+                console.error('Error loading lineage:', error);
+            }
+        }
+        
+        // Load analytics on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAnalytics();
+        });
+    </script>
+</body>
+</html>
+"""
 
 @app.route('/')
 def index():
     """Main dashboard page."""
-    return app.send_static_file("index.html")
+    return render_template_string(HTML_TEMPLATE)
 
 @app.route('/analytics')
 def get_analytics():
@@ -384,8 +857,6 @@ def get_lineage():
 
 def main():
     """Main execution function."""
-    global warehouse
-    warehouse = CloudDataWarehouse()
     print("Cloud Data Warehouse")
     print("=" * 30)
     
