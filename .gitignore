@@ -129,3 +129,12 @@ data/
 models/
 logs/
 
+
+
+# Project specific additions
+__pycache__/
+*.pyc
+*.db
+venv/
+.env
+
