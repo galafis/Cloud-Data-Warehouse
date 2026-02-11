@@ -125,7 +125,7 @@ The application includes sample data for demonstration:
 5. Create a Pull Request
 
 ### License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](config/LICENSE) file for details.
 
 ---
 
@@ -252,7 +252,7 @@ A aplicação inclui dados de exemplo para demonstração:
 5. Crie um Pull Request
 
 ### Licença
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](config/LICENSE) para detalhes.
 
 
 
