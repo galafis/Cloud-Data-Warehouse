@@ -1,272 +1,221 @@
-# 📊 Cloud Data Warehouse
+# Cloud-Data-Warehouse
 
-> Professional project by Gabriel Demetrios Lafis
-
-[![Python](https://img.shields.io/badge/Python-3.12-3776AB.svg)](https://img.shields.io/badge/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-[English](#english) | [Português](#português)
-
----
-
-## English
-
-### 🎯 Overview
-
-**Cloud Data Warehouse** is a production-grade Python application complemented by CSS, HTML, JavaScript that showcases modern software engineering practices including clean architecture, comprehensive testing, containerized deployment, and CI/CD readiness.
-
-The codebase comprises **1,429 lines** of source code organized across **5 modules**, following industry best practices for maintainability, scalability, and code quality.
-
-### ✨ Key Features
-
-- **🔄 Data Pipeline**: Scalable ETL with parallel processing
-- **✅ Data Validation**: Schema validation and quality checks
-- **📊 Monitoring**: Pipeline health metrics and alerting
-- **🔧 Configurability**: YAML/JSON-based pipeline configuration
-- **🏗️ Object-Oriented**: 1 core classes with clean architecture
-
-### 🏗️ Architecture
-
-```mermaid
-graph TB
-    subgraph Core["🏗️ Core"]
-        A[Main Module]
-        B[Business Logic]
-        C[Data Processing]
-    end
-    
-    subgraph Support["🔧 Support"]
-        D[Configuration]
-        E[Utilities]
-        F[Tests]
-    end
-    
-    A --> B --> C
-    D --> A
-    E --> B
-    F -.-> B
-    
-    style Core fill:#e1f5fe
-    style Support fill:#f3e5f5
-```
-
-### 🚀 Quick Start
-
-#### Prerequisites
-
-- Python 3.12+
-- pip (Python package manager)
-
-#### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/galafis/Cloud-Data-Warehouse.git
-cd Cloud-Data-Warehouse
-
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-#### Running
-
-```bash
-# Run the application
-python src/main.py
-```
-
-### 🧪 Testing
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage report
-pytest --cov --cov-report=html
-
-# Run specific test module
-pytest tests/test_main.py -v
-
-# Run with detailed output
-pytest -v --tb=short
-```
-
-### 📁 Project Structure
-
-```
-Cloud-Data-Warehouse/
-├── assets/
-├── config/        # Configuration
-│   ├── LICENSE
-│   └── requirements.txt
-├── docs/          # Documentation
-│   └── script.js
-├── src/          # Source code
-│   └── warehouse.py
-├── tests/         # Test suite
-│   └── test_warehouse.py
-├── LICENSE
-└── README.md
-```
-
-### 🛠️ Tech Stack
-
-| Technology | Description | Role |
-|------------|-------------|------|
-| **Python** | Core Language | Primary |
-| HTML | 1 files | Supporting |
-| JavaScript | 1 files | Supporting |
-| CSS | 1 files | Supporting |
-
-### 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-### 👤 Author
-
-**Gabriel Demetrios Lafis**
-- GitHub: [@galafis](https://github.com/galafis)
-- LinkedIn: [Gabriel Demetrios Lafis](https://linkedin.com/in/gabriel-demetrios-lafis)
+[Português](#português) | [English](#english)
 
 ---
 
 ## Português
 
-### 🎯 Visão Geral
+### Descrição
 
-**Cloud Data Warehouse** é uma aplicação Python de nível profissional, complementada por CSS, HTML, JavaScript que demonstra práticas modernas de engenharia de software, incluindo arquitetura limpa, testes abrangentes, implantação containerizada e prontidão para CI/CD.
+Demonstração de Data Warehouse em nuvem simulado com SQLite, pipeline de dados com pandas e dashboard Flask para análise de vendas.
 
-A base de código compreende **1,429 linhas** de código-fonte organizadas em **5 módulos**, seguindo as melhores práticas do setor para manutenibilidade, escalabilidade e qualidade de código.
+Este projeto implementa a classe `CloudDataWarehouse` que cria um esquema estrela (star schema) em SQLite com tabelas de dimensão e fato, gera dados de exemplo, executa análises de vendas e verificações de qualidade de dados, e serve um dashboard web via Flask.
 
-### ✨ Funcionalidades Principais
+### O que o projeto faz
 
-- **🔄 Data Pipeline**: Scalable ETL with parallel processing
-- **✅ Data Validation**: Schema validation and quality checks
-- **📊 Monitoring**: Pipeline health metrics and alerting
-- **🔧 Configurability**: YAML/JSON-based pipeline configuration
-- **🏗️ Object-Oriented**: 1 core classes with clean architecture
+- **Esquema estrela em SQLite**: Tabelas `dim_products`, `dim_customers`, `dim_time` e `fact_sales`
+- **Geração de dados de exemplo**: 5 clientes, 5 produtos, 90 dias de dimensão temporal e 200 transações de vendas aleatórias
+- **Análises de vendas**: Receita total, lucro total, valor médio por transação, vendas por categoria, vendas por país, tendências mensais
+- **Verificações de qualidade de dados**: Contagem de nulos em campos críticos, verificação de e-mails duplicados, consistência de receita
+- **Rastreamento de linhagem de dados**: Retorna um dicionário estático descrevendo fontes, transformações e destinos
+- **Dashboard Flask**: Interface web HTML com gráficos Chart.js para visualização dos dados de vendas, qualidade e linhagem
 
-### 🏗️ Arquitetura
+### O que o projeto NÃO possui
+
+- Infraestrutura em nuvem real (usa SQLite local)
+- Processamento paralelo
+- Configuração via YAML/JSON
+- Sistema de alertas
+- Containerização (Docker)
+- CI/CD
+
+### Tecnologias
+
+| Tecnologia | Uso |
+|---|---|
+| Python | Linguagem principal |
+| Flask | Servidor web e API REST |
+| pandas | Consultas SQL retornadas como DataFrames |
+| SQLite | Banco de dados local (simulando data warehouse) |
+
+### Arquitetura
 
 ```mermaid
-graph TB
-    subgraph Core["🏗️ Core"]
-        A[Main Module]
-        B[Business Logic]
-        C[Data Processing]
+graph TD
+    subgraph src/warehouse.py
+        CDW[CloudDataWarehouse]
+        CDW -->|cria| DB[(SQLite: warehouse.db)]
+        DB -->|dim_products| FS[fact_sales]
+        DB -->|dim_customers| FS
+        DB -->|dim_time| FS
+        CDW -->|get_sales_analytics| AN[Análises de vendas]
+        CDW -->|run_data_quality_checks| DQ[Verificações de qualidade]
+        CDW -->|get_data_lineage| DL[Linhagem de dados]
     end
-    
-    subgraph Support["🔧 Support"]
-        D[Configuration]
-        E[Utilities]
-        F[Tests]
+
+    subgraph Flask App
+        R1["GET /"] -->|render_template_string| HTML[Dashboard HTML + Chart.js]
+        R2["GET /analytics"] -->|JSON| AN
+        R3["POST /quality-check"] -->|JSON| DQ
+        R4["GET /quality-metrics"] -->|JSON| DB
+        R5["GET /lineage"] -->|JSON| DL
     end
-    
-    A --> B --> C
-    D --> A
-    E --> B
-    F -.-> B
-    
-    style Core fill:#e1f5fe
-    style Support fill:#f3e5f5
 ```
 
-### 🚀 Início Rápido
-
-#### Prerequisites
-
-- Python 3.12+
-- pip (Python package manager)
-
-#### Installation
+### Como executar
 
 ```bash
-# Clone the repository
 git clone https://github.com/galafis/Cloud-Data-Warehouse.git
 cd Cloud-Data-Warehouse
 
-# Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Install dependencies
 pip install -r requirements.txt
+
+python src/warehouse.py
 ```
 
-#### Running
+O dashboard estará disponível em `http://localhost:5000`.
+
+### Testes
+
+O projeto possui 5 testes básicos que verificam:
+
+1. Criação das tabelas no banco de dados
+2. Carregamento dos dados de exemplo
+3. Retorno correto das análises de vendas
+4. Execução das verificações de qualidade de dados
+5. Retorno da linhagem de dados
 
 ```bash
-# Run the application
-python src/main.py
+pytest tests/test_warehouse.py -v
 ```
 
-### 🧪 Testing
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage report
-pytest --cov --cov-report=html
-
-# Run specific test module
-pytest tests/test_main.py -v
-
-# Run with detailed output
-pytest -v --tb=short
-```
-
-### 📁 Estrutura do Projeto
+### Estrutura do Projeto
 
 ```
 Cloud-Data-Warehouse/
-├── assets/
-├── config/        # Configuration
-│   ├── LICENSE
-│   └── requirements.txt
-├── docs/          # Documentation
-│   └── script.js
-├── src/          # Source code
+├── src/
+│   ├── __init__.py
 │   └── warehouse.py
-├── tests/         # Test suite
+├── tests/
 │   └── test_warehouse.py
+├── requirements.txt
 ├── LICENSE
 └── README.md
 ```
 
-### 🛠️ Stack Tecnológica
-
-| Tecnologia | Descrição | Papel |
-|------------|-----------|-------|
-| **Python** | Core Language | Primary |
-| HTML | 1 files | Supporting |
-| JavaScript | 1 files | Supporting |
-| CSS | 1 files | Supporting |
-
-### 🤝 Contribuindo
-
-Contribuições são bem-vindas! Sinta-se à vontade para enviar um Pull Request.
-
-### 📄 Licença
+### Licença
 
 Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
-### 👤 Autor
+---
 
-**Gabriel Demetrios Lafis**
-- GitHub: [@galafis](https://github.com/galafis)
-- LinkedIn: [Gabriel Demetrios Lafis](https://linkedin.com/in/gabriel-demetrios-lafis)
+## English
+
+### Description
+
+Simulated cloud Data Warehouse demonstration using SQLite, data pipeline with pandas, and Flask dashboard for sales analysis.
+
+This project implements the `CloudDataWarehouse` class, which creates a star schema in SQLite with dimension and fact tables, generates sample data, runs sales analytics and data quality checks, and serves a web dashboard via Flask.
+
+### What the project does
+
+- **Star schema in SQLite**: Tables `dim_products`, `dim_customers`, `dim_time`, and `fact_sales`
+- **Sample data generation**: 5 customers, 5 products, 90 days of time dimension, and 200 random sales transactions
+- **Sales analytics**: Total revenue, total profit, average transaction value, sales by category, sales by country, monthly trends
+- **Data quality checks**: Null counts on critical fields, duplicate email detection, revenue consistency checks
+- **Data lineage tracking**: Returns a static dictionary describing sources, transformations, and targets
+- **Flask dashboard**: HTML web interface with Chart.js graphs for visualizing sales data, quality metrics, and lineage
+
+### What the project does NOT have
+
+- Real cloud infrastructure (uses local SQLite)
+- Parallel processing
+- YAML/JSON configuration
+- Alerting system
+- Containerization (Docker)
+- CI/CD
+
+### Tech Stack
+
+| Technology | Usage |
+|---|---|
+| Python | Main language |
+| Flask | Web server and REST API |
+| pandas | SQL queries returned as DataFrames |
+| SQLite | Local database (simulating data warehouse) |
+
+### Architecture
+
+```mermaid
+graph TD
+    subgraph src/warehouse.py
+        CDW[CloudDataWarehouse]
+        CDW -->|creates| DB[(SQLite: warehouse.db)]
+        DB -->|dim_products| FS[fact_sales]
+        DB -->|dim_customers| FS
+        DB -->|dim_time| FS
+        CDW -->|get_sales_analytics| AN[Sales analytics]
+        CDW -->|run_data_quality_checks| DQ[Quality checks]
+        CDW -->|get_data_lineage| DL[Data lineage]
+    end
+
+    subgraph Flask App
+        R1["GET /"] -->|render_template_string| HTML[Dashboard HTML + Chart.js]
+        R2["GET /analytics"] -->|JSON| AN
+        R3["POST /quality-check"] -->|JSON| DQ
+        R4["GET /quality-metrics"] -->|JSON| DB
+        R5["GET /lineage"] -->|JSON| DL
+    end
+```
+
+### How to run
+
+```bash
+git clone https://github.com/galafis/Cloud-Data-Warehouse.git
+cd Cloud-Data-Warehouse
+
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+pip install -r requirements.txt
+
+python src/warehouse.py
+```
+
+The dashboard will be available at `http://localhost:5000`.
+
+### Tests
+
+The project has 5 basic tests that verify:
+
+1. Database table creation
+2. Sample data loading
+3. Correct sales analytics response
+4. Data quality checks execution
+5. Data lineage response
+
+```bash
+pytest tests/test_warehouse.py -v
+```
+
+### Project Structure
+
+```
+Cloud-Data-Warehouse/
+├── src/
+│   ├── __init__.py
+│   └── warehouse.py
+├── tests/
+│   └── test_warehouse.py
+├── requirements.txt
+├── LICENSE
+└── README.md
+```
+
+### License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

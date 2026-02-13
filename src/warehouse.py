@@ -329,7 +329,7 @@ class CloudDataWarehouse:
             ]
         }
 
-warehouse = CloudDataWarehouse()
+warehouse = None
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -865,8 +865,9 @@ def main():
     print("Starting web server...")
     print("Open http://localhost:5000 in your browser")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=5000)
 
 if __name__ == "__main__":
+    warehouse = CloudDataWarehouse()
     main()
 
